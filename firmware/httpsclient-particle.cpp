@@ -388,10 +388,11 @@ int httpsClientConnection(unsigned char * requestContent, uint32 msg_len,
 	}
 	goto WRITE_MORE;
       }
+      start_time = millis();
       /* SSL_REQUEST_SEND is handled by loop logic */
       if (g_https_trace)
 	Serial.println("Sent Successfully?!, everything good");
-	start_time = millis();
+	
     }
   }
  READ_MORE:
@@ -425,16 +426,18 @@ int httpsClientConnection(unsigned char * requestContent, uint32 msg_len,
 				  (uint32*)&len)) < 0) {
     goto L_CLOSE_ERR;
   }
+  Serial.print("Time Taken: ");
+  Serial.println(end_time-start_time);
+  
   if (g_https_trace) {
     end_time = millis();
     Serial.print("matrixSslReceivedData: Tx: ");
     Serial.print((int32) transferred);
     Serial.print(" Len: "); Serial.print(len);
     Serial.print(" rc: "); Serial.println(rc);
-    Serial.print("Time Taken: ");
-    Serial.println(end_time-start_time);
+    
   }
-
+	
  PROCESS_MORE:
   switch (rc) {
   case MATRIXSSL_HANDSHAKE_COMPLETE:
