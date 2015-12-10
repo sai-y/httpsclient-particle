@@ -319,6 +319,8 @@ static int32 TCPRead (int len) {
 
 int httpsClientConnection(unsigned char * requestContent, uint32 msg_len,
 			  const char * message) {
+			  	
+  long start_time = 0, end_time = 0;
   int32 rc, len, transferred;
   g_httpRequestHdr = requestContent;
 
@@ -389,6 +391,7 @@ int httpsClientConnection(unsigned char * requestContent, uint32 msg_len,
       /* SSL_REQUEST_SEND is handled by loop logic */
       if (g_https_trace)
 	Serial.println("Sent Successfully?!, everything good");
+	start_time = millis();
     }
   }
  READ_MORE:
@@ -411,6 +414,7 @@ int httpsClientConnection(unsigned char * requestContent, uint32 msg_len,
     goto L_CLOSE_ERR;
   }
   if (g_https_trace) {
+    
     Serial.print("Received: ");
     Serial.println(transferred);
   }
@@ -422,10 +426,13 @@ int httpsClientConnection(unsigned char * requestContent, uint32 msg_len,
     goto L_CLOSE_ERR;
   }
   if (g_https_trace) {
+    end_time = millis();
     Serial.print("matrixSslReceivedData: Tx: ");
     Serial.print((int32) transferred);
     Serial.print(" Len: "); Serial.print(len);
     Serial.print(" rc: "); Serial.println(rc);
+    Serial.print("Time Taken: ");
+    Serial.println(end_time-start_time);
   }
 
  PROCESS_MORE:
